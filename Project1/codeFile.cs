@@ -30,6 +30,35 @@ namespace Tekla.Technology.Akit.UserScript
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
             // Settings
 
+<<<<<<< HEAD:Project1/codeFile.cs
+=======
+            // <profile list>.csv - file location and name
+            string csvLocation = "f:/stock list.csv";
+
+            // <profile list>.csv - delimeter
+            string delimiterString = ";";
+
+            // list of part names for FL-PL profile check
+            string[] partNamesToCheckArray = { "Afstivning", "(Afstivning)", "Vind-X-Plade", "(Vind-X-Plade)", "Løsdele", "(Løsdele)", "Plade", "(Plade)", "Fladstål", "(Fladstål)", "Flange", "(Flange)" };
+
+            // list of part names to include in name AND prefix swaping (should be Plade and Fladstal)
+            string[] partNamesToSwapArray = { "Plade", "(Plade)", "Fladstål", "(Fladstål)" };
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // stock list.csv
+            //
+            // Instructions for preparation:
+            // 1. you need original DS stock list,
+            // 2. in excel delete all columns but 'Dimension', 'Reserveret' and 'Kvalitet'. This columns should be placed in A, B and C column positions,
+            // 3. go through the rows and:
+            //       - delete the rows with missing material,
+            //       - repair the rows with corrupt material ('275' -> 'S275')
+            //       - delete or repair rows with corrupt profile values (look for stuff like: '12x150', '100*5', '15'). Correct formatting is: 'width thickness'.
+            // 4. save the file as 'stock list.csv' (default delimeter is semicolon. You can change the delimiter in 'delimiterString' variable)
+            // 5. save the file in the location set with 'csvLocation' variable.
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+>>>>>>> parent of bdefb11... Added ideas for improvement:Project1/CodeFile1.cs
             // preparation of variables                                                                                                                                                                       
             char delimeter = delimiterString[0];
 
@@ -108,7 +137,6 @@ namespace Tekla.Technology.Akit.UserScript
                     double objectWidth = -1.0;
                     double objectHeight = -1.0;
                     double objectLength = -1.0;
-
                     currentObject.GetReportProperty("MATERIAL", ref objectMaterial);
                     currentObject.GetReportProperty("WIDTH", ref objectWidth);
                     currentObject.GetReportProperty("HEIGHT", ref objectHeight);
