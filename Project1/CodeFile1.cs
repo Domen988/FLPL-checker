@@ -22,7 +22,7 @@ namespace Tekla.Technology.Akit.UserScript
             // Settings
 
             // <profile list>.csv - file location and name
-            string csvLocation = "f:/stock list.csv";
+            string csvLocation = "c:/stock list.csv";
 
             // <profile list>.csv - delimeter
             string delimiterString = ";";
