@@ -10,28 +10,34 @@ using Tekla.Structures;
 using Tekla.Structures.Model;
 
 namespace Tekla.Technology.Akit.UserScript
-{     
+{
+    public class Variables
+    {
+        public static string caption = "FLPL checker v1.1";
+        public static string date = "23.10.2015";
+    }
+
     public class Script
-    {    
+    {
         // to work in Visual Studio uncomment next line:
-		public static void Main()
+        public static void Main()
         // to use this code as Tekla macro uncomment next line:
         //public static void Run(Tekla.Technology.Akit.IScript akit)
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
             // Settings
-
+            
             // <profile list>.csv - file location and name
-            string csvLocation = "c:/stock list.csv";
+            string csvLocation = "J:/Tekla/SKA_Macro files/stock list.csv";
 
             // <profile list>.csv - delimeter
             string delimiterString = ";";
 
             // list of part names for FL-PL profile check
-            string[] partNamesToCheckArray = { "Afstivning", "(Afstivning)", "Vind-X-Plade", "(Vind-X-Plade)", "Løsdele", "(Løsdele)", "Plade", "(Plade)", "Fladstål", "(Fladstål)", "Flange", "(Flange)" };
+            string[] partNamesToCheckArray = { "Afstivning", "Vind-X-Plade", "Løsdele", "Plade", "Fladstål", "Flange", };
 
             // list of part names to include in name AND prefix swaping (should be Plade and Fladstal)
-            string[] partNamesToSwapArray = { "Plade", "(Plade)", "Fladstål", "(Fladstål)" };
+            string[] partNamesToSwapArray = { "Plade", "Fladstål" };
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // stock list.csv
@@ -50,6 +56,7 @@ namespace Tekla.Technology.Akit.UserScript
             // - add refresh selection button to message box 'Selected objects will be modified
             // - add 'working' icon to mouse
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
 
             // preparation of variables                                                                                                                                                                       
             char delimeter = delimiterString[0];
@@ -69,6 +76,11 @@ namespace Tekla.Technology.Akit.UserScript
             if ( profileList.Count == 0 ) return;
 
             Model Model = new Model();
+            if (!Model.GetConnectionStatus())
+            {
+                MessageBox.Show("Tekla is not open.", Variables.caption);
+                Environment.Exit(1);
+            }
 
             // select object types for selector 
             System.Type[] Types = new System.Type[2];
@@ -110,6 +122,8 @@ namespace Tekla.Technology.Akit.UserScript
 
                 // get name of the object
                 currentObject.GetReportProperty("NAME", ref nameOfObject);
+                // strip the name of brackets
+                nameOfObject = nameOfObject.Replace("(", "").Replace(")", "");
 
                 // get the profile of the object
                 currentObject.GetReportProperty("PROFILE", ref profileOfObject);
@@ -227,7 +241,7 @@ namespace Tekla.Technology.Akit.UserScript
             if (partList.Count != 0)
             {
                 // confirm modification
-                DialogResult dialogResult = MessageBox.Show(new Form { TopMost = true }, "Selected objects will be modified.", "FLPL checker", MessageBoxButtons.OKCancel);
+                DialogResult dialogResult = MessageBox.Show(new Form { TopMost = true }, "Selected objects will be modified.", Variables.caption, MessageBoxButtons.OKCancel);
                 if (dialogResult == DialogResult.OK)
                 {
                     // if OK, then go through list and modify each part
@@ -268,11 +282,11 @@ namespace Tekla.Technology.Akit.UserScript
                     }
                     if (errCount != 0)
                     {
-                        MessageBox.Show("Warning\n# of objects which didn't modify:\n" + errCount + "\n\n# of changed objects:\n" + modCount, "FLPL checker");
+                        MessageBox.Show("Warning\n# of objects which didn't modify:\n" + errCount + "\n\n# of changed objects:\n" + modCount, Variables.caption);
                     }
                     else
                     {
-                        MessageBox.Show("# of changed objects:\n" + modCount, "FLPL checker");
+                        MessageBox.Show("# of changed objects:\n" + modCount, Variables.caption);
                     }
                 }
                 else if (dialogResult == DialogResult.Cancel)
@@ -282,7 +296,7 @@ namespace Tekla.Technology.Akit.UserScript
             }
             else
             {
-                MessageBox.Show("No parts to modifiy found.", "FLPL checker");
+                MessageBox.Show("No parts to modifiy found.", Variables.caption);
             }
         }
 
@@ -338,14 +352,14 @@ namespace Tekla.Technology.Akit.UserScript
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Illegitimate profile line\n\nMaterial in line: \n" + (i + 1).ToString(), "FLPL checker");
+                                        MessageBox.Show("Illegitimate profile line\n\nMaterial in line: \n" + (i + 1).ToString(), Variables.caption);
                                         break;
                                     }
                                 }
                             }
                             else
                             {
-                                MessageBox.Show("Illegitimate profile line\n\nProfile in line: \n" + (i + 1).ToString(), "FLPL checker");
+                                MessageBox.Show("Illegitimate profile line\n\nProfile in line: \n" + (i + 1).ToString(), Variables.caption);
                                 break;
                             }
                         }
@@ -356,7 +370,7 @@ namespace Tekla.Technology.Akit.UserScript
             }
             catch (Exception e)
             {
-                MessageBox.Show("Could not find stock list in location:\n" + csvLocation + "\n-----------------------------------------------------------------------------------\n" + e.ToString(), "FLPL checker");
+                MessageBox.Show("Could not find stock list in location:\n" + csvLocation + "\n-----------------------------------------------------------------------------------\n" + e.ToString(), Variables.caption);
             }
 
             return profileList;
@@ -533,21 +547,16 @@ namespace Tekla.Technology.Akit.UserScript
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Size = new System.Drawing.Size(200, 20);
 
-            // label2
-            this.label2.Text = "V 1.0 / 10.4.2015 / zagar.domen@gmail.com";
-            this.label2.Location = new System.Drawing.Point(13, 73);
-            this.label2.Size = new System.Drawing.Size(250, 20);
-
             // Form1
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "mainForm";
-            this.Text = "FLPL checker";
+            this.Text = Variables.caption + " / " + Variables.date;
 
             // holds top position
             this.TopMost = true;
             
-            this.ClientSize = new System.Drawing.Size(278, 100);
+            this.ClientSize = new System.Drawing.Size(300, 75);
             this.Controls.Add(this.buttonAll);
             this.Controls.Add(this.buttonSelected);
             this.Controls.Add(this.buttonCancel);
