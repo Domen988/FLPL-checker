@@ -13,8 +13,8 @@ namespace Tekla.Technology.Akit.UserScript
 {
     public class Variables
     {
-        public static string caption = "FLPL checker v1.1";
-        public static string date = "23.10.2015";
+        public static string caption = "FLPL checker v1.2";
+        public static string date = "30.1.2016";
     }
 
     public class Script
@@ -28,7 +28,7 @@ namespace Tekla.Technology.Akit.UserScript
             // Settings
             
             // <profile list>.csv - file location and name
-            string csvLocation = "J:/Tekla/SKA_Macro files/stock list.csv";
+            string csvLocation = "J:/Tekla/SKA_Macro files/stock list.csv";        
 
             // <profile list>.csv - delimeter
             string delimiterString = ";";
@@ -56,7 +56,10 @@ namespace Tekla.Technology.Akit.UserScript
             // - add refresh selection button to message box 'Selected objects will be modified
             // - add 'working' icon to mouse
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+            // v1.2, 30.1.2016
+            // - more elaborate errors: added error catching for FileNotFoundException and DirectoryNotFoundException,
+            // - now works also with files, that are currently open (have to check if this is tru also for in multiuser environments),
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // preparation of variables                                                                                                                                                                       
             char delimeter = delimiterString[0];
@@ -94,9 +97,12 @@ namespace Tekla.Technology.Akit.UserScript
             DialogResult dr = new DialogResult();
             mainForm form = new mainForm();
             dr = form.ShowDialog();
+            
             if (dr == DialogResult.Yes)     // 'Yes' is used for all objects
             {
+
                 SelectedObjects = Model.GetModelObjectSelector().GetAllObjectsWithType(Types);
+
             }
             else if (dr == DialogResult.No) // 'No' is used to get selected objects
             {
@@ -228,7 +234,7 @@ namespace Tekla.Technology.Akit.UserScript
                     }
                 }
             }
-            
+
             // select objects that are in list for modification
             Tekla.Structures.Model.UI.ModelObjectSelector mos = new Tekla.Structures.Model.UI.ModelObjectSelector();
             mos.Select(partList);
@@ -312,7 +318,8 @@ namespace Tekla.Technology.Akit.UserScript
 
             try
             {
-                using (StreamReader sr = new StreamReader(csvLocation))
+                FileStream fs = new FileStream(csvLocation, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using (StreamReader sr = new StreamReader(fs))
                 {
                     int i = 0;
                     while (sr.Peek() >= 0)
@@ -370,7 +377,24 @@ namespace Tekla.Technology.Akit.UserScript
             }
             catch (Exception e)
             {
-                MessageBox.Show("Could not find stock list in location:\n" + csvLocation + "\n-----------------------------------------------------------------------------------\n" + e.ToString(), Variables.caption);
+                if (e is DirectoryNotFoundException || e is FileNotFoundException)
+                {
+                    MessageBox.Show(
+                    "READ THIS!\n\n" +
+                    "Could not find stock list in:\n" +
+                    csvLocation +
+                    "\n\nCheck if stock list exists in that location.\n" +
+                    "If needed, change the file path manually:\n" +
+                    "1) open macro with notepad (Tekla -> macro list -> select 'SKA_FLPL_checker' -> press 'Edit'\n" +
+                    "2) change line 31 to point to the stock list location,\n" +
+                    "3) be careful, use '/ ' not '\\'\n" +
+                    "\n---\nFull stack trace:\n\n" +
+                    e.ToString(), Variables.caption);
+                }
+                else
+                {
+                    MessageBox.Show("Unrecognized error:(\n\nSend this to Domen:\n\n" + e.ToString(), Variables.caption);
+                }
             }
 
             return profileList;

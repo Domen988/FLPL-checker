@@ -28,3 +28,9 @@ C:\Users\dza\Documents\GitHub\FLPL-checker\Project1\obj\Debug\Project1.pdb
 C:\Users\dza\Documents\GitHub\FLPL-checker\Project1\bin\Debug\Project1.exe
 C:\Users\dza\Documents\GitHub\FLPL-checker\Project1\bin\Debug\Project1.pdb
 C:\Users\dza\Documents\GitHub\FLPL-checker\Project1\obj\Debug\Project1.csprojResolveAssemblyReference.cache
+C:\Users\xdza\Documents\GitHub\FLPL-checker\Project1\bin\Debug\Project1.exe.config
+C:\Users\xdza\Documents\GitHub\FLPL-checker\Project1\bin\Debug\Project1.exe
+C:\Users\xdza\Documents\GitHub\FLPL-checker\Project1\bin\Debug\Project1.pdb
+C:\Users\xdza\Documents\GitHub\FLPL-checker\Project1\obj\Debug\Project1.csprojResolveAssemblyReference.cache
+C:\Users\xdza\Documents\GitHub\FLPL-checker\Project1\obj\Debug\Project1.exe
+C:\Users\xdza\Documents\GitHub\FLPL-checker\Project1\obj\Debug\Project1.pdb
